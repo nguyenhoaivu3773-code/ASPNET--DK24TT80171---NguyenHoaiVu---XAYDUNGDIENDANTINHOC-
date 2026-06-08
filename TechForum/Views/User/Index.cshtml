@@ -1,0 +1,418 @@
+﻿@model IEnumerable<TechForum.Models.UserIndexItemVM>
+
+@{
+    ViewBag.Title = "Danh sách người dùng";
+
+    int pageSize = 10;
+    int currentPage = 1;
+
+    if (!string.IsNullOrEmpty(Request.QueryString["page"]))
+    {
+        int.TryParse(Request.QueryString["page"], out currentPage);
+
+        if (currentPage <= 0)
+        {
+            currentPage = 1;
+        }
+    }
+
+    string keyword = ViewBag.Keyword != null ? ViewBag.Keyword.ToString() : "";
+
+    var allUsers = Model != null
+        ? Model.ToList()
+        : new List<TechForum.Models.UserIndexItemVM>();
+
+    int totalItems = allUsers.Count;
+    int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+    var pagedUsers = allUsers
+        .Skip((currentPage - 1) * pageSize)
+        .Take(pageSize)
+        .ToList();
+}
+
+@section styles {
+    <style>
+        .user-index-page {
+            padding: 40px 0;
+        }
+
+        .user-index-wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .user-index-header {
+            margin-bottom: 22px;
+        }
+
+        .user-index-title {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 26px;
+            font-weight: 700;
+        }
+
+        .user-index-subtitle {
+            color: #777;
+            margin-top: 6px;
+            margin-bottom: 0;
+        }
+
+        .user-search-box {
+            background: #fff;
+            border: 1px solid #e7e7e7;
+            border-radius: 4px;
+            padding: 18px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+        }
+
+            .user-search-box .form-control {
+                height: 42px;
+                border-radius: 3px;
+                border: 1px solid #ddd;
+                box-shadow: none;
+            }
+
+                .user-search-box .form-control:focus {
+                    border-color: #f48024;
+                    box-shadow: 0 0 0 2px rgba(244, 128, 36, 0.12);
+                }
+
+        .user-search-btn {
+            width: 100%;
+            height: 42px;
+            background: #f48024;
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            border-radius: 3px;
+        }
+
+            .user-search-btn:hover,
+            .user-search-btn:focus {
+                background: #d96d17;
+                color: #fff;
+            }
+
+        .user-card {
+            background: #fff;
+            border: 1px solid #e7e7e7;
+            border-radius: 4px;
+            padding: 18px;
+            margin-bottom: 18px;
+            min-height: 185px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            transition: all 0.2s ease;
+        }
+
+            .user-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+            }
+
+        .user-card-inner {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        .user-card-avatar-box {
+            width: 80px;
+            flex: 0 0 80px;
+            text-align: center;
+        }
+
+        .user-card-avatar {
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #f5f5f5;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+        }
+
+        .user-card-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .user-card-name {
+            margin: 0 0 6px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+            .user-card-name a {
+                color: #2c3e50;
+            }
+
+                .user-card-name a:hover {
+                    color: #f48024;
+                    text-decoration: none;
+                }
+
+        .user-role-badge {
+            display: inline-block;
+            background: #d9534f;
+            color: #fff;
+            padding: 3px 7px;
+            border-radius: 3px;
+            font-size: 11px;
+            margin-left: 5px;
+            vertical-align: middle;
+            text-transform: uppercase;
+        }
+
+        .user-card-email {
+            color: #777;
+            font-size: 13px;
+            margin-bottom: 12px;
+            overflow-wrap: anywhere;
+        }
+
+            .user-card-email i {
+                color: #f48024;
+                margin-right: 4px;
+            }
+
+        .user-card-stats {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 13px;
+        }
+
+        .user-card-stat {
+            flex: 1;
+            background: #f8f8f8;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            padding: 9px 6px;
+            text-align: center;
+        }
+
+            .user-card-stat strong {
+                display: block;
+                color: #f48024;
+                font-size: 18px;
+                line-height: 1.2;
+            }
+
+            .user-card-stat span {
+                color: #777;
+                font-size: 12px;
+            }
+
+        .user-detail-btn {
+            display: inline-block;
+            background: #3c8dbc;
+            color: #fff;
+            border-radius: 3px;
+            padding: 7px 12px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+            .user-detail-btn:hover,
+            .user-detail-btn:focus {
+                background: #337ab7;
+                color: #fff;
+                text-decoration: none;
+            }
+
+        .user-pagination {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+            .user-pagination .pagination > li > a,
+            .user-pagination .pagination > li > span {
+                color: #333;
+                border-radius: 3px;
+                margin: 0 3px;
+                border: 1px solid #ddd;
+            }
+
+            .user-pagination .pagination > .active > a,
+            .user-pagination .pagination > .active > span {
+                background: #f48024;
+                border-color: #f48024;
+                color: #fff;
+            }
+
+            .user-pagination .pagination > li > a:hover {
+                color: #fff;
+                background: #f48024;
+                border-color: #f48024;
+            }
+
+        @@media (max-width: 767px) {
+            .user-card-inner {
+                display: block;
+                text-align: center;
+            }
+
+            .user-card-avatar-box {
+                width: 100%;
+                margin-bottom: 12px;
+            }
+
+            .user-card-stats {
+                flex-direction: column;
+            }
+        }
+    </style>
+}
+
+<section class="main-content920 user-index-page">
+    <div class="container">
+        <div class="user-index-wrapper">
+
+            <div class="user-index-header">
+                <h2 class="user-index-title">Danh sách người dùng</h2>
+                <p class="user-index-subtitle">
+                    Tìm kiếm và xem thông tin hoạt động của các thành viên trong diễn đàn.
+                </p>
+            </div>
+
+            <form action="@Url.Action("Index", "User")" method="get" class="user-search-box">
+                <div class="row">
+                    <div class="col-md-9">
+                        <input type="text"
+                               name="keyword"
+                               class="form-control"
+                               placeholder="Tìm kiếm theo tên hoặc email..."
+                               value="@keyword" />
+                    </div>
+
+                    <div class="col-md-3">
+                        <button type="submit" class="user-search-btn">
+                            <i class="fa fa-search"></i> Tìm kiếm
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            @if (pagedUsers == null || !pagedUsers.Any())
+            {
+                <div class="alert alert-info">
+                    Không tìm thấy người dùng nào.
+                </div>
+            }
+            else
+            {
+                <div class="row">
+                    @foreach (var user in pagedUsers)
+                    {
+                        string avatar = string.IsNullOrEmpty(user.Avatar)
+                            ? "/Uploads/Avatars/default-avatar.png"
+                            : user.Avatar;
+
+                        <div class="col-md-6">
+                            <div class="user-card">
+                                <div class="user-card-inner">
+
+                                    <div class="user-card-avatar-box">
+                                        <a href="@Url.Action("Details", "User", new { id = user.Id })">
+                                            <img src="@avatar"
+                                                 alt="@user.FullName"
+                                                 class="user-card-avatar" />
+                                        </a>
+                                    </div>
+
+                                    <div class="user-card-content">
+                                        <h4 class="user-card-name">
+                                            <a href="@Url.Action("Details", "User", new { id = user.Id })">
+                                                @user.FullName
+                                            </a>
+
+                                            @if (user.Role == "Admin")
+                                            {
+                                                <span class="user-role-badge">admin</span>
+                                            }
+                                        </h4>
+
+                                        <div class="user-card-email">
+                                            <i class="fa fa-envelope-o"></i>
+                                            @user.Email
+                                        </div>
+
+                                        <div class="user-card-stats">
+                                            <div class="user-card-stat">
+                                                <strong>@user.TotalTopics</strong>
+                                                <span>Chủ đề</span>
+                                            </div>
+
+                                            <div class="user-card-stat">
+                                                <strong>@user.TotalVotes</strong>
+                                                <span>Vote</span>
+                                            </div>
+
+                                            <div class="user-card-stat">
+                                                <strong>@user.TotalComments</strong>
+                                                <span>Bình luận</span>
+                                            </div>
+                                        </div>
+
+                                        <a href="@Url.Action("Details", "User", new { id = user.Id })"
+                                           class="user-detail-btn">
+                                            Xem chủ đề
+                                        </a>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                if (totalPages > 1)
+                {
+                    <nav class="user-pagination" aria-label="User pagination">
+                        <ul class="pagination">
+
+                            @if (currentPage > 1)
+                            {
+                                <li>
+                                    <a href="@Url.Action("Index", "User", new { keyword = keyword, page = currentPage - 1 })">
+                                        &laquo;
+                                    </a>
+                                </li>
+                            }
+
+                            @for (int i = 1; i <= totalPages; i++)
+                            {
+                                if (i == currentPage)
+                                {
+                                    <li class="active">
+                                        <span>@i</span>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li>
+                                        <a href="@Url.Action("Index", "User", new { keyword = keyword, page = i })">
+                                            @i
+                                        </a>
+                                    </li>
+                                }
+                            }
+
+                            @if (currentPage < totalPages)
+                            {
+                                <li>
+                                    <a href="@Url.Action("Index", "User", new { keyword = keyword, page = currentPage + 1 })">
+                                        &raquo;
+                                    </a>
+                                </li>
+                            }
+
+                        </ul>
+                    </nav>
+                }
+            }
+
+        </div>
+    </div>
+</section>

@@ -1,0 +1,193 @@
+﻿@model IEnumerable<TechForum.Models.TopicReport>
+
+@{
+    ViewBag.Title = "Quản lý báo cáo chủ đề";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<section class="content-header">
+    <div class="content-header-left">
+        <h1>Quản lý báo cáo chủ đề</h1>
+    </div>
+</section>
+
+<section class="content">
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            <i class="fa fa-check"></i>
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            <i class="fa fa-warning"></i>
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-12">
+
+            <div class="box box-info">
+
+                <div class="box-header with-border">
+                    <h3 class="box-title">Danh sách báo cáo</h3>
+                </div>
+
+                <div class="box-body table-responsive">
+
+                    @if (Model == null || !Model.Any())
+                    {
+                        <div class="alert alert-info">
+                            Chưa có báo cáo nào.
+                        </div>
+                    }
+                    else
+                    {
+                        <table id="example1" class="table table-bordered table-hover table-striped">
+                            <thead>
+                                <tr>
+                                    <th width="10">#</th>
+                                    <th>Chủ đề</th>
+                                    <th width="150">Người báo cáo</th>
+                                    <th>Lý do</th>
+                                    <th width="120">Trạng thái</th>
+                                    <th width="140">Thời gian</th>
+                                    <th width="280">Xử lý</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @{
+                                    var index = 0;
+                                }
+
+                                @foreach (var report in Model)
+                                {
+                                    index++;
+
+                                    <tr>
+                                        <td>@index</td>
+
+                                        <td>
+                                            @if (report.Topic != null)
+                                            {
+                                                <a href="@Url.Action("Details", "Topic", new { id = report.TopicId })"
+                                                   target="_blank">
+                                                    <strong>@report.Topic.Title</strong>
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">Chủ đề không tồn tại</span>
+                                            }
+                                        </td>
+
+                                        <td>
+                                            @(report.ReporterUser != null ? report.ReporterUser.FullName : "Không rõ")
+                                        </td>
+
+                                        <td>
+                                            @report.Reason
+                                        </td>
+
+                                        <td>
+                                            @if (report.Status == "Pending")
+                                            {
+                                                <span class="badge" style="background-color:#f39c12;">
+                                                    Chờ xử lý
+                                                </span>
+                                            }
+                                            else if (report.Status == "Approved")
+                                            {
+                                                <span class="badge" style="background-color:green;">
+                                                    Hợp lệ
+                                                </span>
+                                            }
+                                            else if (report.Status == "Rejected")
+                                            {
+                                                <span class="badge" style="background-color:gray;">
+                                                    Không hợp lệ
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge" style="background-color:#777;">
+                                                    @report.Status
+                                                </span>
+                                            }
+                                        </td>
+
+                                        <td>
+                                            @report.CreatedAt.ToString("dd/MM/yyyy HH:mm")
+                                        </td>
+
+                                        <td>
+                                            @if (report.Status == "Pending")
+                                            {
+                                                using (Html.BeginForm("HandleTopicReport", "Admin", FormMethod.Post))
+                                                {
+                                                    @Html.AntiForgeryToken()
+
+                                                    <input type="hidden" name="reportId" value="@report.Id" />
+
+                                                    <div class="form-group">
+                                                        <select name="status" class="form-control input-sm">
+                                                            <option value="Approved">Báo cáo hợp lệ</option>
+                                                            <option value="Rejected">Báo cáo không hợp lệ</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <input type="text"
+                                                               name="adminNote"
+                                                               class="form-control input-sm"
+                                                               placeholder="Ghi chú xử lý..." />
+                                                    </div>
+
+                                                    <div class="checkbox">
+                                                        <label for="hideTopic_@report.Id">
+                                                            <input type="checkbox"
+                                                                   name="hideTopic"
+                                                                   value="true"
+                                                                   id="hideTopic_@report.Id" />
+                                                            Ẩn chủ đề này
+                                                        </label>
+                                                    </div>
+
+                                                    <button type="submit"
+                                                            class="btn btn-primary btn-xs"
+                                                            onclick="return confirm('Bạn có chắc muốn xử lý báo cáo này không?');">
+                                                        <i class="fa fa-check"></i> Xử lý
+                                                    </button>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <div class="small">
+                                                    <strong>Ghi chú:</strong>
+                                                    @(string.IsNullOrEmpty(report.AdminNote) ? "Không có" : report.AdminNote)
+                                                </div>
+
+                                                <div class="small text-muted">
+                                                    <strong>Xử lý lúc:</strong>
+                                                    @(report.HandledAt.HasValue ? report.HandledAt.Value.ToString("dd/MM/yyyy HH:mm") : "Chưa có")
+                                                </div>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

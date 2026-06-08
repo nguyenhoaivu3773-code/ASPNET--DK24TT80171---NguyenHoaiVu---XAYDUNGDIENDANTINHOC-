@@ -1,0 +1,665 @@
+﻿@model TechForum.Models.TopicIndexVM
+
+@{
+    ViewBag.Title = "Danh sách chủ đề";
+
+    int pageSize = 10;
+    int currentPage = 1;
+
+    if (!string.IsNullOrEmpty(Request.QueryString["page"]))
+    {
+        int.TryParse(Request.QueryString["page"], out currentPage);
+
+        if (currentPage <= 0)
+        {
+            currentPage = 1;
+        }
+    }
+
+    string keyword = Model.Keyword ?? "";
+    string sort = Model.Sort ?? "newest";
+
+    var allTopics = Model.Topics != null
+        ? Model.Topics.ToList()
+        : null;
+
+    int totalItems = allTopics != null ? allTopics.Count : 0;
+    int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+    var pagedTopics = allTopics != null
+        ? allTopics.Skip((currentPage - 1) * pageSize).Take(pageSize).ToList()
+        : null;
+}
+
+@section styles {
+    <style>
+        body {
+            background: #f3f3f3;
+        }
+
+        .topic-index-page {
+            padding-top: 30px;
+            padding-bottom: 40px;
+        }
+
+        .topic-full-container {
+            width: 96%;
+            max-width: 1600px;
+        }
+
+        .topic-page-heading {
+            background: #fff;
+            border: 1px solid #e6e6e6;
+            padding: 18px 20px;
+            margin-bottom: 20px;
+        }
+
+            .topic-page-heading h2 {
+                margin: 0;
+                font-size: 25px;
+                font-weight: 700;
+                color: #333;
+            }
+
+            .topic-page-heading p {
+                margin: 7px 0 0;
+                color: #777;
+            }
+
+        .topic-create-btn {
+            background: #f48024;
+            color: #fff;
+            padding: 9px 16px;
+            display: inline-block;
+            border-radius: 2px;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+            .topic-create-btn:hover,
+            .topic-create-btn:focus {
+                background: #d96d17;
+                color: #fff;
+                text-decoration: none;
+            }
+
+        .topic-search-box {
+            background: #fff;
+            border: 1px solid #e6e6e6;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+            .topic-search-box .form-control {
+                height: 42px;
+                border-radius: 2px;
+                box-shadow: none;
+            }
+
+        .topic-search-btn {
+            width: 100%;
+            height: 42px;
+            border: none;
+            background: #f48024;
+            color: #fff;
+            font-weight: 600;
+            border-radius: 2px;
+        }
+
+            .topic-search-btn:hover {
+                background: #d96d17;
+            }
+
+        .topic-sort-tabs {
+            background: #fff;
+            border: 1px solid #e6e6e6;
+            margin-bottom: 15px;
+            padding: 12px 15px;
+        }
+
+            .topic-sort-tabs a {
+                display: inline-block;
+                padding: 8px 13px;
+                margin-right: 6px;
+                margin-bottom: 5px;
+                color: #333;
+                background: #f7f7f7;
+                border: 1px solid #ddd;
+                border-radius: 2px;
+                font-weight: 600;
+                font-size: 13px;
+            }
+
+                .topic-sort-tabs a:hover,
+                .topic-sort-tabs a.active {
+                    background: #f48024;
+                    color: #fff;
+                    border-color: #f48024;
+                    text-decoration: none;
+                }
+
+        .topic-question-card {
+            background: #fff;
+            border: 1px solid #e6e6e6;
+            padding: 20px 15px;
+            margin-bottom: 15px;
+        }
+
+        .topic-avatar-box {
+            text-align: center;
+        }
+
+            .topic-avatar-box img {
+                width: 48px;
+                height: 48px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 3px solid #f0f0f0;
+            }
+
+        .topic-check-icon {
+            display: block;
+            color: #27ae60;
+            margin-top: 8px;
+            font-size: 15px;
+        }
+
+        .topic-title {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 20px;
+            line-height: 1.35;
+        }
+
+            .topic-title a {
+                color: #333;
+                font-weight: 700;
+            }
+
+                .topic-title a:hover {
+                    color: #f48024;
+                    text-decoration: none;
+                }
+
+        .topic-content {
+            color: #555;
+            line-height: 1.65;
+            margin-bottom: 0;
+        }
+
+        .topic-meta {
+            margin-top: 12px;
+            font-size: 13px;
+        }
+
+            .topic-meta a,
+            .topic-meta span {
+                display: inline-block;
+                margin-right: 10px;
+                margin-bottom: 5px;
+                color: #777;
+            }
+
+            .topic-meta i {
+                color: #f48024;
+                margin-right: 3px;
+            }
+
+        .topic-stat-box {
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        .topic-stat-btn {
+            display: block;
+            width: 100%;
+            border: none;
+            border-radius: 2px;
+            padding: 9px 5px;
+            margin-bottom: 8px;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .topic-answer-btn {
+            background: #3498db;
+        }
+
+        .topic-view-btn {
+            background: #34495e;
+        }
+
+        .topic-vote-btn {
+            background: #f48024;
+        }
+
+        .topic-side-box {
+            background: #fff;
+            border: 1px solid #e6e6e6;
+            padding: 18px;
+            margin-bottom: 20px;
+        }
+
+            .topic-side-box h4 {
+                margin-top: 0;
+                margin-bottom: 15px;
+                font-size: 18px;
+                font-weight: 700;
+                color: #333;
+                padding-bottom: 10px;
+                border-bottom: 1px solid #eee;
+            }
+
+        .topic-tag-list {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 0;
+        }
+
+            .topic-tag-list li {
+                margin-bottom: 8px;
+            }
+
+            .topic-tag-list a {
+                display: block;
+                background: #f7f7f7;
+                border: 1px solid #eee;
+                color: #555;
+                padding: 8px 10px;
+                border-radius: 2px;
+                font-size: 13px;
+                font-weight: 600;
+            }
+
+                .topic-tag-list a:hover,
+                .topic-tag-list a.active {
+                    background: #f48024;
+                    color: #fff;
+                    border-color: #f48024;
+                    text-decoration: none;
+                }
+
+        .top-vote-user {
+            display: block;
+            overflow: hidden;
+            padding-bottom: 13px;
+            margin-bottom: 13px;
+            border-bottom: 1px solid #eee;
+        }
+
+            .top-vote-user:last-child {
+                margin-bottom: 0;
+                padding-bottom: 0;
+                border-bottom: none;
+            }
+
+        .top-vote-avatar {
+            float: left;
+            width: 42px;
+            height: 42px;
+            margin-right: 10px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #f1f1f1;
+        }
+
+        .top-vote-info {
+            overflow: hidden;
+        }
+
+            .top-vote-info a {
+                display: block;
+                color: #333;
+                font-weight: 700;
+                line-height: 1.25;
+            }
+
+                .top-vote-info a:hover {
+                    color: #f48024;
+                    text-decoration: none;
+                }
+
+            .top-vote-info span {
+                display: block;
+                color: #777;
+                font-size: 12px;
+                margin-top: 3px;
+            }
+
+        .topic-pagination {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+            .topic-pagination .pagination > li > a,
+            .topic-pagination .pagination > li > span {
+                color: #333;
+                margin: 0 3px;
+                border-radius: 2px;
+            }
+
+                .topic-pagination .pagination > .active > a,
+                .topic-pagination .pagination > .active > span,
+                .topic-pagination .pagination > li > a:hover {
+                    background: #f48024;
+                    border-color: #f48024;
+                    color: #fff;
+                }
+
+        @@media (max-width: 991px) {
+            .topic-full-container {
+                width: 100%;
+            }
+
+            .topic-left-sidebar,
+            .topic-right-sidebar {
+                margin-bottom: 20px;
+            }
+        }
+
+        @@media (max-width: 767px) {
+            .topic-page-heading .text-right {
+                text-align: left;
+                margin-top: 12px;
+            }
+
+            .topic-search-btn {
+                margin-top: 10px;
+            }
+
+            .topic-stat-box {
+                margin-top: 15px;
+            }
+        }
+    </style>
+}
+
+<section class="main-content920 topic-index-page">
+    <div class="container-fluid topic-full-container">
+
+        <div class="topic-page-heading">
+            <div class="row">
+                <div class="col-md-8">
+                    <h2>Danh sách chủ đề</h2>
+                    <p>Tìm kiếm, lọc theo thẻ và theo dõi các chủ đề nổi bật trong diễn đàn.</p>
+                </div>
+
+                <div class="col-md-4 text-right">
+                    <a href="@Url.Action("Create", "Topic")" class="topic-create-btn">
+                        <i class="fa fa-plus"></i> Tạo chủ đề
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <!-- LEFT SIDEBAR: TAGS -->
+            <aside class="col-md-2 topic-left-sidebar">
+                <div class="topic-side-box tags-part2398">
+                    <h4>Danh sách thẻ</h4>
+
+                    <ul class="topic-tag-list">
+                        <li>
+                            <a href="@Url.Action("Index", "Topic", new { keyword = Model.Keyword, sort = Model.Sort, page = 1 })"
+                               class="@(Model.SelectedTagId == null ? "active" : "")">
+                                Tất cả thẻ
+                            </a>
+                        </li>
+
+                        @if (Model.Tags != null && Model.Tags.Any())
+                        {
+                            foreach (var tag in Model.Tags)
+                            {
+                                <li>
+                                    <a href="@Url.Action("Index", "Topic", new { keyword = Model.Keyword, tagId = tag.Id, sort = Model.Sort, page = 1 })"
+                                       class="@(Model.SelectedTagId == tag.Id ? "active" : "")">
+                                        @tag.Name
+                                    </a>
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <li>
+                                <span class="text-muted">Chưa có thẻ nào.</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </aside>
+
+            <!-- CENTER CONTENT -->
+            <div class="col-md-8">
+
+                <form action="@Url.Action("Index", "Topic")" method="get" class="topic-search-box">
+                    <input type="hidden" name="tagId" value="@Model.SelectedTagId" />
+                    <input type="hidden" name="sort" value="@Model.Sort" />
+                    <input type="hidden" name="page" value="1" />
+
+                    <div class="row">
+                        <div class="col-md-10">
+                            <input type="text"
+                                   name="keyword"
+                                   class="form-control"
+                                   placeholder="Tìm kiếm theo tiêu đề hoặc nội dung..."
+                                   value="@Model.Keyword" />
+                        </div>
+
+                        <div class="col-md-2">
+                            <button type="submit" class="topic-search-btn">
+                                <i class="fa fa-search"></i> Tìm
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="topic-sort-tabs">
+                    <a href="@Url.Action("Index", "Topic", new { keyword = Model.Keyword, tagId = Model.SelectedTagId, sort = "newest", page = 1 })"
+                       class="@(sort == "newest" ? "active" : "")">
+                        Mới nhất
+                    </a>
+
+                    <a href="@Url.Action("Index", "Topic", new { keyword = Model.Keyword, tagId = Model.SelectedTagId, sort = "most-voted", page = 1 })"
+                       class="@(sort == "most-voted" ? "active" : "")">
+                        Nhiều vote
+                    </a>
+
+                    <a href="@Url.Action("Index", "Topic", new { keyword = Model.Keyword, tagId = Model.SelectedTagId, sort = "most-discussed", page = 1 })"
+                       class="@(sort == "most-discussed" ? "active" : "")">
+                        Nhiều thảo luận
+                    </a>
+                </div>
+
+                @if (pagedTopics == null || !pagedTopics.Any())
+                {
+                    <div class="alert alert-info">
+                        Không tìm thấy chủ đề nào.
+                    </div>
+                }
+                else
+                {
+                    foreach (var topic in pagedTopics)
+                    {
+                        string content = topic.Content ?? "";
+                        string shortContent = content.Length > 220
+                            ? content.Substring(0, 220) + "..."
+                            : content;
+                        string topicAvatar = string.IsNullOrEmpty(topic.UserAvatar)
+                            ? Url.Content("~/Uploads/Avatars/user.png")
+                            : Url.Content(topic.UserAvatar);
+
+                        <div class="question-type2033 topic-question-card">
+                            <div class="row">
+
+                                <div class="col-md-1 col-sm-2">
+                                    <div class="left-user12923 topic-avatar-box">
+                                        <a href="@Url.Action("Details", "User", new { id = topic.UserId })">
+                                            <img src="@topicAvatar" alt="@topic.UserFullName" />
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-9 col-sm-7">
+                                    <div class="right-description893">
+                                        <div id="que-hedder2983">
+                                            <h3 class="topic-title">
+                                                <a href="@Url.Action("Details", "Topic", new { id = topic.Id })">
+                                                    @topic.Title
+                                                </a>
+                                            </h3>
+                                        </div>
+
+                                        <div class="ques-details10018">
+                                            <p class="topic-content">
+                                                @shortContent
+                                            </p>
+                                        </div>
+
+                                        <hr />
+
+                                        <div class="ques-icon-info3293 topic-meta">
+                                            <span>
+                                                <i class="fa fa-user" aria-hidden="true"></i>
+                                                @topic.UserFullName
+                                            </span>
+
+                                            <span>
+                                                <i class="fa fa-clock-o" aria-hidden="true"></i>
+                                                @topic.CreatedAt.ToString("dd/MM/yyyy HH:mm")
+                                            </span>
+
+                                            @if (topic.Tags != null && topic.Tags.Any())
+                                            {
+                                                foreach (var tag in topic.Tags)
+                                                {
+                                                    <a href="@Url.Action("Index", "Topic", new { tagId = tag.Id, sort = Model.Sort, page = 1 })">
+                                                        <i class="fa fa-folder" aria-hidden="true"></i>
+                                                        @tag.Name
+                                                    </a>
+                                                }
+                                            }
+
+                                            <a href="@Url.Action("Details", "Topic", new { id = topic.Id })">
+                                                <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+                                                Xem chi tiết
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2 col-sm-3">
+                                    <div class="ques-type302 topic-stat-box">
+                                        <button type="button" class="topic-stat-btn topic-answer-btn">
+                                            <i class="fa fa-comment" aria-hidden="true"></i>
+                                            @topic.CommentCount trả lời
+                                        </button>
+
+                                        <button type="button" class="topic-stat-btn topic-view-btn">
+                                            <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                                            @topic.ViewCount xem
+                                        </button>
+
+                                        <button type="button" class="topic-stat-btn topic-vote-btn">
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                            @topic.VoteCount vote
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    }
+
+                    if (totalPages > 1)
+                    {
+                        <nav class="topic-pagination" aria-label="Topic pagination">
+                            <ul class="pagination">
+
+                                @if (currentPage > 1)
+                                {
+                                    <li>
+                                        <a href="@Url.Action("Index", "Topic", new { keyword = Model.Keyword, tagId = Model.SelectedTagId, sort = Model.Sort, page = currentPage - 1 })">
+                                            &laquo;
+                                        </a>
+                                    </li>
+                                }
+
+                                @for (int i = 1; i <= totalPages; i++)
+                                {
+                                    if (i == currentPage)
+                                    {
+                                        <li class="active">
+                                            <span>@i</span>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li>
+                                            <a href="@Url.Action("Index", "Topic", new { keyword = Model.Keyword, tagId = Model.SelectedTagId, sort = Model.Sort, page = i })">
+                                                @i
+                                            </a>
+                                        </li>
+                                    }
+                                }
+
+                                @if (currentPage < totalPages)
+                                {
+                                    <li>
+                                        <a href="@Url.Action("Index", "Topic", new { keyword = Model.Keyword, tagId = Model.SelectedTagId, sort = Model.Sort, page = currentPage + 1 })">
+                                            &raquo;
+                                        </a>
+                                    </li>
+                                }
+
+                            </ul>
+                        </nav>
+                    }
+                }
+            </div>
+
+            <!-- RIGHT SIDEBAR: TOP USERS -->
+            <aside class="col-md-2 topic-right-sidebar">
+                <div class="topic-side-box highest-part302">
+                    <h4>Top vote cao nhất</h4>
+
+                    @if (Model.TopUsersByVotes == null || !Model.TopUsersByVotes.Any())
+                    {
+                        <div class="text-muted">
+                            Chưa có dữ liệu vote.
+                        </div>
+                    }
+                    else
+                    {
+                        foreach (var user in Model.TopUsersByVotes.Take(10))
+                        {
+                            string avatar = string.IsNullOrEmpty(user.Avatar)
+                                ? Url.Content("~/Uploads/Avatars/user.png")
+                                : user.Avatar;
+
+                            <div class="top-vote-user">
+                                <img src="@avatar" alt="@user.FullName" class="top-vote-avatar" />
+
+                                <div class="top-vote-info">
+                                    <a href="@Url.Action("Details", "User", new { id = user.UserId })">
+                                        @user.FullName
+                                    </a>
+
+                                    <span>
+                                        @user.TotalVotes vote
+                                    </span>
+
+                                    <span>
+                                        @user.TotalTopics chủ đề
+                                    </span>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </aside>
+
+        </div>
+    </div>
+</section>

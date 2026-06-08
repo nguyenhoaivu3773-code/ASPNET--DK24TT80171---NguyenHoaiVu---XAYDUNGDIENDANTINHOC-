@@ -1,0 +1,336 @@
+﻿@model TechForum.Models.TopicCreateVM
+
+@{
+    ViewBag.Title = "Tạo chủ đề";
+}
+
+@section styles {
+    <style>
+        .topic-create-page {
+            padding: 40px 0;
+        }
+
+        .topic-create-wrapper {
+            max-width: 980px;
+            margin: 0 auto;
+        }
+
+        .topic-create-card {
+            background: #fff;
+            border: 1px solid #e7e7e7;
+            border-radius: 4px;
+            padding: 28px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            border-top: 4px solid #f48024;
+        }
+
+        .topic-create-title {
+            margin-top: 0;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-size: 26px;
+            font-weight: 700;
+        }
+
+        .topic-create-desc {
+            color: #777;
+            margin-bottom: 24px;
+        }
+
+        .topic-create-form-group {
+            margin-bottom: 22px;
+        }
+
+            .topic-create-form-group label {
+                font-weight: 700;
+                color: #333;
+                margin-bottom: 8px;
+                display: block;
+            }
+
+            .topic-create-form-group .form-control {
+                border-radius: 3px;
+                border: 1px solid #ddd;
+                box-shadow: none;
+            }
+
+                .topic-create-form-group .form-control:focus {
+                    border-color: #f48024;
+                    box-shadow: 0 0 0 2px rgba(244, 128, 36, 0.12);
+                }
+
+        .topic-create-input {
+            height: 43px;
+        }
+
+        .topic-create-textarea {
+            min-height: 180px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        .topic-help-text {
+            color: #777;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .topic-tags-box {
+            background: #fafafa;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            padding: 15px;
+            max-height: 260px;
+            overflow-y: auto;
+        }
+
+        .topic-tag-item {
+            margin-bottom: 10px;
+        }
+
+        .topic-tag-label {
+            display: inline-flex !important;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500 !important;
+            color: #555 !important;
+            cursor: pointer;
+            margin: 0;
+        }
+
+            .topic-tag-label input {
+                margin: 0;
+            }
+
+        .topic-file-input {
+            height: auto !important;
+            padding: 8px 12px;
+        }
+
+        .topic-action-row {
+            margin-top: 25px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .topic-submit-btn {
+            background: #f48024;
+            border: none;
+            color: #fff;
+            font-weight: 700;
+            border-radius: 3px;
+            padding: 9px 18px;
+        }
+
+            .topic-submit-btn:hover,
+            .topic-submit-btn:focus {
+                background: #d96d17;
+                color: #fff;
+            }
+
+        .topic-back-btn {
+            background: #777;
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            border-radius: 3px;
+            padding: 9px 18px;
+            display: inline-block;
+        }
+
+            .topic-back-btn:hover,
+            .topic-back-btn:focus {
+                background: #666;
+                color: #fff;
+                text-decoration: none;
+            }
+
+        .validation-summary-errors ul {
+            margin-bottom: 0;
+            padding-left: 18px;
+        }
+
+        .field-validation-error {
+            display: block;
+            color: #d9534f;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        @@media (max-width: 767px) {
+            .topic-create-card {
+                padding: 22px 18px;
+            }
+
+            .topic-action-row {
+                display: block;
+            }
+
+            .topic-submit-btn,
+            .topic-back-btn {
+                width: 100%;
+                text-align: center;
+                margin-bottom: 8px;
+            }
+        }
+    </style>
+}
+
+<section class="main-content920 topic-create-page">
+    <div class="container">
+        <div class="topic-create-wrapper">
+
+            <div class="topic-create-card">
+
+                <h2 class="topic-create-title">Tạo chủ đề thảo luận</h2>
+                <p class="topic-create-desc">
+                    Chia sẻ câu hỏi hoặc vấn đề bạn đang gặp để cộng đồng cùng thảo luận và hỗ trợ.
+                </p>
+
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="alert alert-danger">
+                        <strong>Vui lòng kiểm tra lại thông tin.</strong>
+                        @Html.ValidationSummary()
+                    </div>
+                }
+
+                <form action="@Url.Action("Create", "Topic")" method="post" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+
+                    <div class="topic-create-form-group">
+                        <label for="Title">Tiêu đề chủ đề</label>
+                        <input type="text"
+                               name="Title"
+                               id="Title"
+                               class="form-control topic-create-input"
+                               placeholder="Ví dụ: Làm sao học C# hiệu quả?"
+                               value="@(Model != null ? Model.Title : "")" />
+
+                        @Html.ValidationMessage("Title")
+                    </div>
+
+                    <div class="topic-create-form-group">
+                        <label for="Content">Nội dung</label>
+                        <textarea name="Content"
+                                  id="Content"
+                                  class="form-control topic-create-textarea"
+                                  rows="8"
+                                  placeholder="Mô tả rõ câu hỏi, lỗi gặp phải, đoạn code liên quan hoặc mong muốn của bạn...">@(Model != null ? Model.Content : "")</textarea>
+
+                        @Html.ValidationMessage("Content")
+                    </div>
+
+                    <div class="topic-create-form-group">
+                        <label>Thẻ chủ đề</label>
+                        <p class="topic-help-text">
+                            Chọn tối đa 10 thẻ phù hợp để mọi người dễ tìm thấy chủ đề của bạn.
+                        </p>
+
+                        <div class="topic-tags-box">
+                            <div class="row">
+                                @if (Model != null && Model.AvailableTags != null && Model.AvailableTags.Any())
+                                {
+                                    foreach (var tag in Model.AvailableTags)
+                                    {
+                                        bool isChecked = Model.SelectedTagIds != null && Model.SelectedTagIds.Contains(tag.Id);
+
+                                        <div class="col-md-4 col-sm-6 topic-tag-item">
+                                            <label class="topic-tag-label">
+                                                <input type="checkbox"
+                                                       name="SelectedTagIds"
+                                                       value="@tag.Id"
+                                                       @(isChecked ? "checked" : "") />
+                                                <span>@tag.Name</span>
+                                            </label>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="col-md-12">
+                                        <div class="alert alert-info" style="margin-bottom:0;">
+                                            Chưa có thẻ nào để chọn.
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        @Html.ValidationMessage("SelectedTagIds")
+                    </div>
+
+                    <div class="topic-create-form-group">
+                        <label for="ImageFiles">Ảnh đính kèm</label>
+                        <p class="topic-help-text">
+                            Có thể không upload ảnh. Nếu upload, tối đa 3 ảnh, mỗi ảnh không quá 3MB.
+                        </p>
+
+                        <input type="file"
+                               name="ImageFiles"
+                               id="ImageFiles"
+                               class="form-control topic-file-input"
+                               accept=".jpg,.jpeg,.png,.gif,.webp"
+                               multiple />
+
+                        @Html.ValidationMessage("ImageFiles")
+                    </div>
+
+                    <div class="topic-action-row">
+                        <button type="submit" class="topic-submit-btn">
+                            <i class="fa fa-paper-plane"></i> Đăng chủ đề
+                        </button>
+
+                        <a href="@Url.Action("Index", "Topic")" class="topic-back-btn">
+                            <i class="fa fa-arrow-left"></i> Quay lại
+                        </a>
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</section>
+
+@section scripts {
+    <script>
+        (function () {
+            var imageInput = document.getElementById("ImageFiles");
+
+            if (imageInput) {
+                imageInput.addEventListener("change", function () {
+                    if (this.files.length > 3) {
+                        alert("Bạn chỉ được chọn tối đa 3 ảnh.");
+                        this.value = "";
+                        return;
+                    }
+
+                    for (var i = 0; i < this.files.length; i++) {
+                        var fileSizeMb = this.files[i].size / 1024 / 1024;
+
+                        if (fileSizeMb > 3) {
+                            alert("Mỗi ảnh không được vượt quá 3MB.");
+                            this.value = "";
+                            return;
+                        }
+                    }
+                });
+            }
+
+            var tagCheckboxes = document.querySelectorAll('input[name="SelectedTagIds"]');
+
+            tagCheckboxes.forEach(function (checkbox) {
+                checkbox.addEventListener("change", function () {
+                    var checkedCount = document.querySelectorAll('input[name="SelectedTagIds"]:checked').length;
+
+                    if (checkedCount > 10) {
+                        alert("Bạn chỉ được chọn tối đa 10 thẻ.");
+                        this.checked = false;
+                    }
+                });
+            });
+        })();
+    </script>
+}

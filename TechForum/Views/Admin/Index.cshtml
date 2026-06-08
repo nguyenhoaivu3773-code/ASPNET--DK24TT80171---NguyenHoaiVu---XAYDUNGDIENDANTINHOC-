@@ -1,0 +1,92 @@
+﻿@model TechForum.Models.AdminDashboardVM
+
+@{
+    ViewBag.Title = "Trang quản trị";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<section class="content-header">
+    <h1>Tổng quan</h1>
+</section>
+
+<section class="content">
+
+    <div class="row">
+
+        <div class="col-lg-3 col-xs-6">
+            <div class="small-box bg-primary">
+                <div class="inner">
+                    <h3>@Model.TotalUsers</h3>
+                    <p>Người dùng</p>
+                </div>
+                <div class="icon">
+                    <i class="ionicons ion-person-stalker"></i>
+                </div>
+                <a href="@Url.Action("Users", "Admin")" class="small-box-footer">
+                    Xem chi tiết <i class="fa fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-xs-6">
+            <div class="small-box bg-green">
+                <div class="inner">
+                    <h3>@Model.TotalTopics</h3>
+                    <p>Chủ đề</p>
+                </div>
+                <div class="icon">
+                    <i class="ionicons ion-chatboxes"></i>
+                </div>
+                <a href="@Url.Action("Topics", "Admin")" class="small-box-footer">
+                    Xem chi tiết <i class="fa fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-xs-6">
+            <div class="small-box bg-yellow">
+                <div class="inner">
+                    <h3>@Model.TotalTags</h3>
+                    <p>Thẻ</p>
+                </div>
+                <div class="icon">
+                    <i class="ionicons ion-pricetags"></i>
+                </div>
+                <a href="@Url.Action("Tags", "Admin")" class="small-box-footer">
+                    Xem chi tiết <i class="fa fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-xs-6">
+            <div class="small-box bg-red">
+                <div class="inner">
+                    <h3>@Model.PendingReports</h3>
+                    <p>Báo cáo chờ xử lý</p>
+                </div>
+                <div class="icon">
+                    <i class="ionicons ion-alert-circled"></i>
+                </div>
+                <a href="@Url.Action("TopicReports", "Admin")" class="small-box-footer">
+                    Xử lý báo cáo <i class="fa fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    @if (Model.PendingReports > 0)
+    {
+        <div class="alert alert-warning">
+            Hiện có <strong>@Model.PendingReports</strong> báo cáo chủ đề đang chờ xử lý.
+            Vui lòng kiểm tra trong mục <strong>Quản lý báo cáo chủ đề</strong>.
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-success">
+            Hiện không có báo cáo nào đang chờ xử lý.
+        </div>
+    }
+
+</section>

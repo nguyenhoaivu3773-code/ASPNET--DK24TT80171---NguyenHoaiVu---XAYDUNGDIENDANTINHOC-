@@ -1,0 +1,1294 @@
+﻿@model TechForum.Models.TopicDetailsVM
+
+@{
+    ViewBag.Title = Model.Topic.Title;
+
+    string authorAvatar = Model.Topic.User != null && !string.IsNullOrEmpty(Model.Topic.User.Avatar)
+        ? Url.Content(Model.Topic.User.Avatar)
+        : Url.Content("~/Uploads/Avatars/default-avatar.png");
+
+    string authorName = Model.Topic.User != null ? Model.Topic.User.FullName : "Ẩn danh";
+}
+
+@section styles {
+    <style>
+        body {
+            background: #f3f3f3;
+        }
+
+        .topic-detail-page {
+            padding: 30px 0 45px;
+        }
+
+        .topic-detail-container {
+            width: 96%;
+            max-width: 1500px;
+        }
+
+        .post-details {
+            background: #fff;
+            border: 1px solid #e6e6e6;
+            margin-bottom: 20px;
+        }
+
+        .details-header923 {
+            padding: 18px 20px;
+            border-bottom: 1px solid #e6e6e6;
+            background: #fff;
+        }
+
+        .post-title-left129 h3 {
+            margin: 0;
+            color: #333;
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 1.35;
+        }
+
+        .post-que-rep-rihght320 {
+            text-align: right;
+            padding-top: 4px;
+        }
+
+            .post-que-rep-rihght320 a {
+                display: inline-block;
+                color: #777;
+                font-size: 13px;
+                font-weight: 600;
+                margin-left: 8px;
+            }
+
+                .post-que-rep-rihght320 a:hover {
+                    color: #f48024;
+                    text-decoration: none;
+                }
+
+            .post-que-rep-rihght320 .r-clor10 {
+                color: #d9534f;
+            }
+
+        .post-details-info1982 {
+            padding: 20px;
+        }
+
+        .topic-detail-content {
+            color: #444;
+            line-height: 1.8;
+            font-size: 15px;
+            white-space: pre-line;
+            margin-bottom: 15px;
+        }
+
+        .topic-detail-tags {
+            margin-bottom: 15px;
+        }
+
+        .topic-detail-tag {
+            display: inline-block;
+            background: #f1f1f1;
+            color: #555;
+            padding: 5px 9px;
+            border-radius: 2px;
+            font-size: 12px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+            .topic-detail-tag:hover {
+                background: #f48024;
+                color: #fff;
+                text-decoration: none;
+            }
+
+        .post-footer29032 {
+            overflow: hidden;
+            padding-top: 5px;
+        }
+
+        .l-side2023 {
+            float: left;
+            color: #777;
+            font-size: 13px;
+            line-height: 2;
+        }
+
+            .l-side2023 i,
+            .l-side2023 a {
+                color: #777;
+                margin-right: 10px;
+            }
+
+                .l-side2023 i.fa-check,
+                .l-side2023 .star2,
+                .l-side2023 .folder2,
+                .l-side2023 .clock2,
+                .l-side2023 .commenting2,
+                .l-side2023 .user2 {
+                    color: #f48024;
+                }
+
+                .l-side2023 a:hover,
+                .l-side2023 a:hover i {
+                    color: #d96d17;
+                    text-decoration: none;
+                }
+
+        .l-rightside39 {
+            float: right;
+            text-align: right;
+        }
+
+        .tolltip-button {
+            border: none;
+            background: #f1f1f1;
+            color: #555;
+            width: 34px;
+            height: 32px;
+            border-radius: 2px;
+            margin-left: 3px;
+        }
+
+            .tolltip-button:hover {
+                background: #f48024;
+                color: #fff;
+            }
+
+        .single-question-vote-result {
+            display: inline-block;
+            background: #f48024;
+            color: #fff;
+            padding: 6px 10px;
+            border-radius: 2px;
+            margin-left: 5px;
+            font-weight: 700;
+        }
+
+        .topic-action-row {
+            margin-top: 18px;
+        }
+
+            .topic-action-row form {
+                display: inline-block;
+                margin-right: 6px;
+                margin-bottom: 6px;
+            }
+
+        .topic-btn {
+            border: none;
+            border-radius: 2px;
+            padding: 8px 13px;
+            font-weight: 600;
+            display: inline-block;
+            margin-right: 6px;
+            margin-bottom: 6px;
+        }
+
+        .topic-btn-vote {
+            background: #28a745;
+            color: #fff;
+        }
+
+            .topic-btn-vote:hover {
+                background: #218838;
+                color: #fff;
+            }
+
+        .topic-btn-voted {
+            background: #28a745;
+            color: #fff;
+            opacity: 0.75;
+            cursor: not-allowed;
+        }
+
+        .topic-btn-report {
+            background: #d9534f;
+            color: #fff;
+        }
+
+            .topic-btn-report:hover {
+                background: #c9302c;
+                color: #fff;
+            }
+
+        .topic-btn-login {
+            background: #3c8dbc;
+            color: #fff;
+        }
+
+            .topic-btn-login:hover {
+                background: #337ab7;
+                color: #fff;
+                text-decoration: none;
+            }
+
+        .report-box {
+            background: #fff;
+            border: 1px solid #e6e6e6;
+            border-left: 4px solid #d9534f;
+            padding: 18px;
+            margin-bottom: 20px;
+        }
+
+            .report-box h5 {
+                margin-top: 0;
+                color: #c9302c;
+                font-weight: 700;
+            }
+
+            .report-box textarea,
+            .topic-answer-box textarea,
+            .reply-form textarea {
+                border-radius: 2px;
+                border: 1px solid #ddd;
+                box-shadow: none;
+            }
+
+                .report-box textarea:focus,
+                .topic-answer-box textarea:focus,
+                .reply-form textarea:focus {
+                    border-color: #f48024;
+                    box-shadow: none;
+                }
+
+        .topic-images-row {
+            margin-bottom: 20px;
+        }
+
+        .topic-image-item {
+            margin-bottom: 15px;
+        }
+
+            .topic-image-item img {
+                width: 100%;
+                height: 220px;
+                object-fit: cover;
+                border: 1px solid #ddd;
+                background: #fff;
+                padding: 4px;
+            }
+
+        .topic-section-title {
+            margin: 25px 0 15px;
+            color: #333;
+            font-size: 21px;
+            font-weight: 700;
+        }
+
+        .topic-answer-box {
+            background: #fff;
+            border: 1px solid #e6e6e6;
+            padding: 18px;
+            margin-bottom: 25px;
+        }
+
+        .topic-submit-comment-btn,
+        .reply-submit-btn {
+            background: #f48024;
+            color: #fff;
+            border: none;
+            border-radius: 2px;
+            padding: 8px 15px;
+            font-weight: 600;
+        }
+
+            .topic-submit-comment-btn:hover,
+            .reply-submit-btn:hover {
+                background: #d96d17;
+                color: #fff;
+            }
+
+        .comment-list12993 {
+            margin-top: 10px;
+        }
+
+        .comments-container {
+            width: 100%;
+        }
+
+        .comments-list {
+            list-style: none;
+            padding-left: 0;
+            margin: 0;
+            position: relative;
+        }
+
+            .comments-list:before {
+                content: "";
+                width: 2px;
+                height: 100%;
+                background: #ddd;
+                position: absolute;
+                left: 32px;
+                top: 0;
+            }
+
+            .comments-list li {
+                margin-bottom: 15px;
+                display: block;
+                position: relative;
+            }
+
+                .comments-list li:after {
+                    content: "";
+                    display: block;
+                    clear: both;
+                }
+
+            .comments-list .comment-avatar {
+                width: 64px;
+                height: 64px;
+                position: relative;
+                z-index: 2;
+                float: left;
+                border: 3px solid #fff;
+                border-radius: 50%;
+                overflow: hidden;
+                box-shadow: 0 1px 5px rgba(0,0,0,0.15);
+                background: #fff;
+            }
+
+                .comments-list .comment-avatar img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+
+        .comment-main-level:after {
+            content: "";
+            display: block;
+            clear: both;
+        }
+
+        .comments-list .comment-box {
+            width: calc(100% - 85px);
+            float: right;
+            background: #fff;
+            border: 1px solid #e6e6e6;
+            position: relative;
+        }
+
+            .comments-list .comment-box:before {
+                content: "";
+                position: absolute;
+                top: 20px;
+                left: -10px;
+                border-width: 10px 10px 10px 0;
+                border-style: solid;
+                border-color: transparent #e6e6e6 transparent transparent;
+            }
+
+            .comments-list .comment-box:after {
+                content: "";
+                position: absolute;
+                top: 21px;
+                left: -8px;
+                border-width: 9px 9px 9px 0;
+                border-style: solid;
+                border-color: transparent #fff transparent transparent;
+            }
+
+        .comment-head {
+            background: #f8f8f8;
+            padding: 12px 15px;
+            border-bottom: 1px solid #e6e6e6;
+            overflow: hidden;
+        }
+
+            .comment-head h6 {
+                float: left;
+                margin: 0;
+                font-size: 14px;
+                font-weight: 700;
+                line-height: 22px;
+            }
+
+                .comment-head h6 a {
+                    color: #333;
+                }
+
+                    .comment-head h6 a:hover {
+                        color: #f48024;
+                        text-decoration: none;
+                    }
+
+            .comment-head span {
+                float: left;
+                margin-left: 10px;
+                color: #777;
+                font-size: 12px;
+                line-height: 22px;
+            }
+
+            .comment-head i {
+                float: right;
+                color: #999;
+                font-size: 14px;
+                margin-left: 10px;
+                cursor: pointer;
+                line-height: 22px;
+            }
+
+                .comment-head i:hover {
+                    color: #f48024;
+                }
+
+        .comment-name.by-author a {
+            color: #f48024;
+        }
+
+        .comment-name.by-author:after {
+            content: "admin";
+            background: #d9534f;
+            color: #fff;
+            font-size: 10px;
+            padding: 2px 5px;
+            margin-left: 6px;
+            border-radius: 2px;
+            text-transform: uppercase;
+        }
+
+        .comment-content {
+            padding: 14px 15px;
+            color: #444;
+            line-height: 1.7;
+            white-space: pre-line;
+        }
+
+        .reply-toggle {
+            border: none;
+            background: transparent;
+            color: #f48024;
+            font-weight: 600;
+            padding: 0;
+            margin-left: 10px;
+        }
+
+            .reply-toggle:hover {
+                color: #d96d17;
+                text-decoration: none;
+            }
+
+        .comment-head .reply-toggle {
+            float: right;
+            line-height: 22px;
+        }
+
+            .comment-head .reply-toggle i {
+                float: none;
+                margin-left: 0;
+                margin-right: 4px;
+                color: inherit;
+                line-height: normal;
+            }
+
+        .reply-form {
+            padding: 0 15px 15px;
+        }
+
+            .reply-form textarea {
+                margin-bottom: 8px;
+            }
+
+        .reply-list {
+            padding-left: 88px;
+            margin-top: 15px;
+        }
+
+            .reply-list:before {
+                left: 120px;
+            }
+
+            .reply-list .comment-avatar {
+                width: 52px;
+                height: 52px;
+            }
+
+            .reply-list .comment-box {
+                width: calc(100% - 72px);
+            }
+
+        .hidden-comment-item,
+        .hidden-reply-item {
+            display: none !important;
+        }
+
+        .load-more-comments-btn,
+        .load-more-replies-btn {
+            background: #f48024;
+            color: #fff;
+            border: none;
+            border-radius: 2px;
+            padding: 8px 14px;
+            font-weight: 600;
+            margin: 10px 0 18px 85px;
+        }
+
+            .load-more-comments-btn:hover,
+            .load-more-replies-btn:hover {
+                background: #d96d17;
+                color: #fff;
+            }
+
+        .load-more-replies-btn {
+            margin-left: 88px;
+            padding: 6px 12px;
+            font-size: 13px;
+        }
+
+        .topic-back-btn {
+            display: inline-block;
+            background: #777;
+            color: #fff;
+            border-radius: 2px;
+            padding: 8px 14px;
+            font-weight: 600;
+            margin-top: 12px;
+        }
+
+            .topic-back-btn:hover {
+                background: #666;
+                color: #fff;
+                text-decoration: none;
+            }
+
+        .topic-sidebar-box {
+            background: #fff;
+            border: 1px solid #e6e6e6;
+            padding: 18px;
+            margin-bottom: 20px;
+        }
+
+            .topic-sidebar-box h4 {
+                margin-top: 0;
+                margin-bottom: 15px;
+                color: #333;
+                font-size: 18px;
+                font-weight: 700;
+                padding-bottom: 10px;
+                border-bottom: 1px solid #eee;
+            }
+
+        .author-box {
+            text-align: center;
+        }
+
+        .author-avatar {
+            width: 88px;
+            height: 88px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #f5f5f5;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+        }
+
+        .author-name {
+            display: block;
+            color: #333;
+            font-weight: 700;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+            .author-name:hover {
+                color: #f48024;
+                text-decoration: none;
+            }
+
+        .author-role-badge {
+            display: inline-block;
+            background: #d9534f;
+            color: #fff;
+            padding: 3px 7px;
+            border-radius: 2px;
+            font-size: 11px;
+            margin-top: 5px;
+            text-transform: uppercase;
+        }
+
+        .pints-wrapper {
+            overflow: hidden;
+            padding-bottom: 13px;
+            margin-bottom: 13px;
+            border-bottom: 1px solid #eee;
+        }
+
+            .pints-wrapper:last-child {
+                padding-bottom: 0;
+                margin-bottom: 0;
+                border-bottom: none;
+            }
+
+        .left-user3898 {
+            float: left;
+            width: 45px;
+            height: 45px;
+            margin-right: 10px;
+            position: relative;
+        }
+
+            .left-user3898 img {
+                width: 45px;
+                height: 45px;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+
+        .points-details938 {
+            display: block;
+            overflow: hidden;
+        }
+
+            .points-details938 h5 {
+                margin: 0 0 4px;
+                font-size: 14px;
+                line-height: 1.35;
+            }
+
+                .points-details938 h5 a,
+                .points-details938 a h5 {
+                    color: #333;
+                    font-weight: 700;
+                }
+
+                    .points-details938 h5 a:hover,
+                    .points-details938 a h5:hover {
+                        color: #f48024;
+                        text-decoration: none;
+                    }
+
+            .points-details938 p,
+            .points-details938 .designetion439 {
+                color: #777;
+                font-size: 12px;
+                margin: 0;
+                display: block;
+            }
+
+        .author-topic-tag {
+            display: inline-block;
+            background: #f1f1f1;
+            color: #555;
+            padding: 3px 7px;
+            border-radius: 2px;
+            font-size: 11px;
+            margin-right: 4px;
+            margin-top: 5px;
+        }
+
+            .author-topic-tag:hover {
+                background: #f48024;
+                color: #fff;
+                text-decoration: none;
+            }
+
+        @@media (max-width: 991px) {
+            .topic-sidebar-box {
+                margin-top: 20px;
+            }
+
+            .post-que-rep-rihght320 {
+                text-align: left;
+                margin-top: 10px;
+            }
+        }
+
+        @@media (max-width: 767px) {
+            .topic-detail-container {
+                width: 100%;
+            }
+
+            .post-title-left129 h3 {
+                font-size: 21px;
+            }
+
+            .l-side2023,
+            .l-rightside39 {
+                float: none;
+                text-align: left;
+            }
+
+            .l-rightside39 {
+                margin-top: 10px;
+            }
+
+            .comments-list:before {
+                display: none;
+            }
+
+            .comments-list .comment-avatar,
+            .reply-list .comment-avatar {
+                float: none;
+                margin-bottom: 8px;
+            }
+
+            .comments-list .comment-box,
+            .reply-list .comment-box {
+                width: 100%;
+                float: none;
+            }
+
+                .comments-list .comment-box:before,
+                .comments-list .comment-box:after {
+                    display: none;
+                }
+
+            .reply-list {
+                padding-left: 20px;
+            }
+
+            .comment-head h6,
+            .comment-head span,
+            .comment-head i {
+                float: none;
+                display: inline-block;
+            }
+
+            .load-more-comments-btn,
+            .load-more-replies-btn {
+                margin-left: 0;
+            }
+        }
+    </style>
+}
+
+<section class="main-content920 topic-detail-page">
+    <div class="container-fluid topic-detail-container">
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["SuccessMessage"]
+            </div>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+
+        <div class="row">
+            <div class="col-md-9">
+
+                <div class="post-details">
+                    <div class="details-header923">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="post-title-left129">
+                                    <h3>@Model.Topic.Title</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="post-details-info1982">
+                        <p class="topic-detail-content">@Model.Topic.Content</p>
+
+                        @if (Model.Topic.TopicTags != null && Model.Topic.TopicTags.Any())
+                        {
+                            <div class="topic-detail-tags">
+                                @foreach (var item in Model.Topic.TopicTags)
+                                {
+                                    <a href="@Url.Action("Index", "Topic", new { tagId = item.Tag.Id })"
+                                       class="topic-detail-tag">
+                                        @item.Tag.Name
+                                    </a>
+                                }
+                            </div>
+                        }
+
+                        <hr />
+
+                        <div class="post-footer29032">
+                            <div class="l-side2023">
+
+                                <i class="fa fa-star star2" aria-hidden="true">
+                                    @Model.Topic.VoteCount vote
+                                </i>
+
+                                <i class="fa fa-clock-o clock2" aria-hidden="true">
+                                    @Model.Topic.CreatedAt.ToString("dd/MM/yyyy HH:mm")
+                                </i>
+
+                                <a href="#comments-list">
+                                    <i class="fa fa-commenting commenting2" aria-hidden="true">
+                                        @(Model.ParentComments != null ? Model.ParentComments.Count : 0) trả lời
+                                    </i>
+                                </a>
+
+                                <i class="fa fa-user user2" aria-hidden="true">
+                                    @Model.Topic.ViewCount views
+                                </i>
+                            </div>
+                        </div>
+
+                        <div class="topic-action-row">
+                            @if (Session["UserId"] != null)
+                            {
+                                if (Model.HasVoted)
+                                {
+                                    <button class="topic-btn topic-btn-voted" disabled>
+                                        <i class="fa fa-check"></i> Đã vote
+                                    </button>
+                                }
+                                else
+                                {
+                                    <form action="@Url.Action("Vote", "Topic")" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="topicId" value="@Model.Topic.Id" />
+
+                                        <button type="submit" class="topic-btn topic-btn-vote">
+                                            <i class="fa fa-thumbs-o-up"></i> Vote chủ đề
+                                        </button>
+                                    </form>
+                                }
+
+                                <button type="button"
+                                        class="topic-btn topic-btn-report"
+                                        id="btnShowReportForm2">
+                                    <i class="fa fa-flag"></i> Báo cáo chủ đề
+                                </button>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("Login", "Account", new { returnUrl = Request.RawUrl })" class="topic-btn topic-btn-login">
+                                    <i class="fa fa-sign-in"></i> Đăng nhập để vote
+                                </a>
+
+                                <a href="@Url.Action("Login", "Account", new { returnUrl = Request.RawUrl })" class="topic-btn topic-btn-login">
+                                    <i class="fa fa-sign-in"></i> Đăng nhập để báo cáo
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                @if (Session["UserId"] != null)
+                {
+                    <div id="reportFormBox" class="report-box" style="display:none;">
+                        <h5>
+                            <i class="fa fa-flag"></i>
+                            Báo cáo chủ đề vi phạm
+                        </h5>
+
+                        <form action="@Url.Action("Report", "Topic")" method="post">
+                            @Html.AntiForgeryToken()
+
+                            <input type="hidden" name="topicId" value="@Model.Topic.Id" />
+
+                            <div class="form-group">
+                                <label for="reason">Lý do báo cáo</label>
+                                <textarea name="reason"
+                                          id="reason"
+                                          class="form-control"
+                                          rows="4"
+                                          maxlength="500"
+                                          placeholder="Ví dụ: Nội dung sai sự thật, spam, xúc phạm người khác, không phù hợp với diễn đàn..."></textarea>
+                            </div>
+
+                            <button type="submit" class="topic-btn topic-btn-report">
+                                Gửi báo cáo
+                            </button>
+
+                            <button type="button"
+                                    class="topic-btn"
+                                    id="btnCancelReport"
+                                    style="background:#777;color:#fff;">
+                                Hủy
+                            </button>
+                        </form>
+                    </div>
+                }
+
+                @if (Model.Topic.TopicImages != null && Model.Topic.TopicImages.Any())
+                {
+                    <div class="row topic-images-row">
+                        @foreach (var image in Model.Topic.TopicImages)
+                        {
+                            <div class="col-md-4 col-sm-6 topic-image-item">
+                                <img src="@image.ImagePath" alt="Topic image" />
+                            </div>
+                        }
+                    </div>
+                }
+
+                <h4 class="topic-section-title">Trả lời chủ đề</h4>
+
+                @if (Session["UserId"] != null)
+                {
+                    <div class="topic-answer-box">
+                        <form action="@Url.Action("AddComment", "Topic")" method="post">
+                            @Html.AntiForgeryToken()
+
+                            <input type="hidden" name="topicId" value="@Model.Topic.Id" />
+
+                            <div class="form-group">
+                                <textarea name="content"
+                                          class="form-control"
+                                          rows="4"
+                                          placeholder="Nhập câu trả lời của bạn..."></textarea>
+                            </div>
+
+                            <button type="submit" class="topic-submit-comment-btn">
+                                <i class="fa fa-paper-plane"></i> Gửi trả lời
+                            </button>
+                        </form>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-info">
+                        Vui lòng <a href="@Url.Action("Login", "Account", new { returnUrl = Request.RawUrl })">đăng nhập</a> để trả lời chủ đề.
+                    </div>
+                }
+
+                <h4 class="topic-section-title">Danh sách thảo luận</h4>
+
+                <div class="comment-list12993">
+                    <div class="comments-container">
+
+                        @if (Model.ParentComments == null || !Model.ParentComments.Any())
+                        {
+                            <div class="alert alert-info">
+                                Chưa có trả lời nào cho chủ đề này.
+                            </div>
+                        }
+                        else
+                        {
+                            int parentCommentIndex = 0;
+
+                            <ul id="comments-list" class="comments-list">
+                                @foreach (var comment in Model.ParentComments)
+                                {
+                                    string parentCommentClass = parentCommentIndex >= 3 ? "hidden-comment-item" : "";
+
+                                    string commentAvatar = comment.User != null && !string.IsNullOrEmpty(comment.User.Avatar)
+                                        ? Url.Content(comment.User.Avatar)
+                                        : Url.Content("~/Uploads/Avatars/default-avatar.png");
+
+                                    string commentUserName = comment.User != null ? comment.User.FullName : "Ẩn danh";
+                                    bool isCommentAdmin = comment.User != null && comment.User.Role == "Admin";
+
+                                    <li class="parent-comment-item @parentCommentClass">
+                                        <div class="comment-main-level">
+                                            <div class="comment-avatar">
+                                                <img src="@commentAvatar" alt="@commentUserName" />
+                                            </div>
+
+                                            <div class="comment-box">
+                                                <div class="comment-head">
+                                                    <h6 class="comment-name @(isCommentAdmin ? "by-author" : "")">
+                                                        <a href="#">
+                                                            @commentUserName
+                                                        </a>
+                                                    </h6>
+
+                                                    <span>
+                                                        <i class="fa fa-clock-o" aria-hidden="true">
+                                                            @comment.CreatedAt.ToString("dd/MM/yyyy HH:mm")
+                                                        </i>
+                                                    </span>
+
+                                                    @if (Session["UserId"] != null)
+                                                    {
+                                                        <button type="button"
+                                                                class="reply-toggle"
+                                                                data-target="reply-form-@comment.Id">
+                                                            <i class="fa fa-reply"></i> Bình luận
+                                                        </button>
+                                                    }
+
+                                                    <i class="fa fa-heart"></i>
+                                                </div>
+
+                                                <div class="comment-content">
+                                                    @comment.Content
+                                                </div>
+
+                                                @if (Session["UserId"] != null)
+                                                {
+                                                    <form action="@Url.Action("AddComment", "Topic")"
+                                                          method="post"
+                                                          id="reply-form-@comment.Id"
+                                                          class="reply-form"
+                                                          style="display:none;">
+                                                        @Html.AntiForgeryToken()
+
+                                                        <input type="hidden" name="topicId" value="@Model.Topic.Id" />
+                                                        <input type="hidden" name="parentCommentId" value="@comment.Id" />
+
+                                                        <textarea name="content"
+                                                                  class="form-control"
+                                                                  rows="2"
+                                                                  placeholder="Nhập bình luận của bạn..."></textarea>
+
+                                                        <button type="submit" class="reply-submit-btn">
+                                                            Gửi bình luận
+                                                        </button>
+                                                    </form>
+                                                }
+                                            </div>
+                                        </div>
+
+                                        @if (comment.Replies != null && comment.Replies.Any())
+                                        {
+                                            int replyIndex = 0;
+
+                                            <ul class="comments-list reply-list">
+                                                @foreach (var reply in comment.Replies)
+                                                {
+                                                    string replyClass = replyIndex >= 3 ? "hidden-reply-item" : "";
+
+                                                    string replyAvatar = reply.User != null && !string.IsNullOrEmpty(reply.User.Avatar)
+                                                        ? Url.Content(reply.User.Avatar)
+                                                        : Url.Content("~/Uploads/Avatars/default-avatar.png");
+
+                                                    string replyUserName = reply.User != null ? reply.User.FullName : "Ẩn danh";
+                                                    bool isReplyAdmin = reply.User != null && reply.User.Role == "Admin";
+
+                                                    <li class="reply-comment-item @replyClass">
+                                                        <div class="comment-avatar">
+                                                            <img src="@replyAvatar" alt="@replyUserName" />
+                                                        </div>
+
+                                                        <div class="comment-box">
+                                                            <div class="comment-head">
+                                                                <h6 class="comment-name @(isReplyAdmin ? "by-author" : "")">
+                                                                    <a href="#">
+                                                                        @replyUserName
+                                                                    </a>
+                                                                </h6>
+
+                                                                <span>
+                                                                    <i class="fa fa-clock-o" aria-hidden="true">
+                                                                        @reply.CreatedAt.ToString("dd/MM/yyyy HH:mm")
+                                                                    </i>
+                                                                </span>
+
+                                                                <i class="fa fa-heart"></i>
+                                                            </div>
+
+                                                            <div class="comment-content">
+                                                                @reply.Content
+                                                            </div>
+                                                        </div>
+                                                    </li>
+
+                                                    replyIndex++;
+                                                }
+                                            </ul>
+
+                                            if (comment.Replies.Count > 3)
+                                            {
+                                                <button type="button"
+                                                        class="load-more-replies-btn">
+                                                    Xem thêm trả lời
+                                                </button>
+                                            }
+                                        }
+                                    </li>
+
+                                    parentCommentIndex++;
+                                }
+                            </ul>
+
+                            if (Model.ParentComments.Count > 3)
+                            {
+                                <button type="button"
+                                        id="btnLoadMoreComments"
+                                        class="load-more-comments-btn">
+                                    Xem thêm trả lời
+                                </button>
+                            }
+                        }
+
+                    </div>
+                </div>
+
+                <a href="@Url.Action("Index", "Topic")" class="topic-back-btn">
+                    <i class="fa fa-arrow-left"></i> Quay lại danh sách
+                </a>
+            </div>
+
+            <aside class="col-md-3 sidebar97239">
+
+                <div class="topic-sidebar-box highest-part302">
+                    <h4>Tác giả</h4>
+
+                    <div class="author-box">
+                        <img src="@authorAvatar"
+                             alt="@authorName"
+                             class="author-avatar" />
+
+                        @if (Model.Topic.User != null)
+                        {
+                            <a href="@Url.Action("Details", "User", new { id = Model.Topic.User.Id })"
+                               class="author-name">
+                                @authorName
+                            </a>
+
+                            if (Model.Topic.User.Role == "Admin")
+                            {
+                                <span class="author-role-badge">admin</span>
+                            }
+                        }
+                        else
+                        {
+                            <span class="author-name">@authorName</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="topic-sidebar-box highest-part302">
+                    <h4>Chủ đề nổi bật của @authorName</h4>
+
+                    @if (Model.AuthorTopVotedTopics == null || !Model.AuthorTopVotedTopics.Any())
+                    {
+                        <div class="text-muted">
+                            Tác giả này chưa có chủ đề nổi bật khác.
+                        </div>
+                    }
+                    else
+                    {
+                        foreach (var item in Model.AuthorTopVotedTopics)
+                        {
+                            <div class="pints-wrapper">
+                                <div class="left-user3898">
+                                    <a href="@Url.Action("Details", "Topic", new { id = item.Id })">
+                                        <img src="@authorAvatar" alt="@authorName" />
+                                    </a>
+                                </div>
+
+                                <span class="points-details938">
+                                    <a href="@Url.Action("Details", "Topic", new { id = item.Id })">
+                                        <h5>@item.Title</h5>
+                                    </a>
+
+                                    <span class="designetion439">
+                                        <i class="fa fa-star"></i>
+                                        @item.VoteCount vote
+                                    </span>
+
+                                    <p>
+                                        <i class="fa fa-eye"></i>
+                                        @item.ViewCount xem ·
+                                        <i class="fa fa-comment"></i>
+                                        @item.CommentCount trả lời
+                                    </p>
+
+                                    <p>
+                                        <i class="fa fa-clock-o"></i>
+                                        @item.CreatedAt.ToString("dd/MM/yyyy HH:mm")
+                                    </p>
+
+                                    @if (item.Tags != null && item.Tags.Any())
+                                    {
+                                        foreach (var tag in item.Tags)
+                                        {
+                                            <a href="@Url.Action("Index", "Topic", new { tagId = tag.Id })"
+                                               class="author-topic-tag">
+                                                @tag.Name
+                                            </a>
+                                        }
+                                    }
+                                </span>
+                            </div>
+                        }
+                    }
+                </div>
+
+            </aside>
+        </div>
+    </div>
+</section>
+
+@section scripts {
+    <script>
+        (function () {
+            var buttons = document.querySelectorAll(".reply-toggle");
+
+            buttons.forEach(function (button) {
+                button.addEventListener("click", function () {
+                    var targetId = this.getAttribute("data-target");
+                    var form = document.getElementById(targetId);
+
+                    if (!form) {
+                        return;
+                    }
+
+                    if (form.style.display === "none" || form.style.display === "") {
+                        form.style.display = "block";
+                    } else {
+                        form.style.display = "none";
+                    }
+                });
+            });
+
+            var reportButton = document.getElementById("btnShowReportForm");
+            var reportButton2 = document.getElementById("btnShowReportForm2");
+            var reportBox = document.getElementById("reportFormBox");
+            var cancelReportButton = document.getElementById("btnCancelReport");
+
+            function showReportBox() {
+                if (reportBox) {
+                    reportBox.style.display = "block";
+                    reportBox.scrollIntoView({ behavior: "smooth", block: "center" });
+                }
+            }
+
+            if (reportButton) {
+                reportButton.addEventListener("click", showReportBox);
+            }
+
+            if (reportButton2) {
+                reportButton2.addEventListener("click", showReportBox);
+            }
+
+            if (cancelReportButton && reportBox) {
+                cancelReportButton.addEventListener("click", function () {
+                    reportBox.style.display = "none";
+                });
+            }
+
+            var loadMoreCommentsButton = document.getElementById("btnLoadMoreComments");
+
+            if (loadMoreCommentsButton) {
+                loadMoreCommentsButton.addEventListener("click", function () {
+                    var hiddenComments = document.querySelectorAll(".hidden-comment-item");
+
+                    for (var i = 0; i < 3 && i < hiddenComments.length; i++) {
+                        hiddenComments[i].classList.remove("hidden-comment-item");
+                    }
+
+                    if (document.querySelectorAll(".hidden-comment-item").length === 0) {
+                        loadMoreCommentsButton.style.display = "none";
+                    }
+                });
+            }
+
+            var loadMoreRepliesButtons = document.querySelectorAll(".load-more-replies-btn");
+
+            loadMoreRepliesButtons.forEach(function (button) {
+                button.addEventListener("click", function () {
+                    var replyList = this.previousElementSibling;
+
+                    if (!replyList || !replyList.classList.contains("reply-list")) {
+                        return;
+                    }
+
+                    var hiddenReplies = replyList.querySelectorAll(".hidden-reply-item");
+
+                    for (var i = 0; i < 3 && i < hiddenReplies.length; i++) {
+                        hiddenReplies[i].classList.remove("hidden-reply-item");
+                    }
+
+                    if (replyList.querySelectorAll(".hidden-reply-item").length === 0) {
+                        this.style.display = "none";
+                    }
+                });
+            });
+        })();
+    </script>
+}

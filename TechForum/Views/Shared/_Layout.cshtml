@@ -1,0 +1,254 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="title" content="TechForum">
+    <meta name="description" content="Diễn đàn hỏi đáp công nghệ, lập trình, phần mềm và kiến thức IT.">
+    <meta name="keywords" content="Forum, TechForum, C#, ASP.NET MVC, SQL Server, lập trình, hỏi đáp">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="Vietnamese">
+
+    <title>@ViewBag.Title - TechForum</title>
+
+    <link href="~/Content/user/css/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/user/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/user/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/user/css/responsive.css" rel="stylesheet" type="text/css" />
+
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .site-main-content {
+            flex: 1 0 auto;
+        }
+
+        .footer-social {
+            flex-shrink: 0;
+            margin-top: auto;
+        }
+
+        .forum-logo-text {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: 0.8px;
+            color: #fff !important;
+            text-transform: uppercase;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+            line-height: 50px;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+        }
+
+            .forum-logo-text:hover,
+            .forum-logo-text:focus {
+                color: #d35400 !important;
+                text-decoration: none;
+            }
+
+        .user-profile-link {
+            display: flex !important;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+        }
+
+        .user-profile-avatar {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .admin-link a {
+            color: #fff !important;
+            background-color: #337ab7;
+            border-radius: 3px;
+            margin-top: 10px;
+            margin-left: 5px;
+            padding: 8px 12px !important;
+        }
+
+            .admin-link a:hover,
+            .admin-link a:focus {
+                background-color: #286090 !important;
+                color: #fff !important;
+            }
+
+        .logout-link a {
+            color: #fff !important;
+            background-color: #d9534f;
+            border-radius: 3px;
+            margin-top: 10px;
+            margin-left: 5px;
+            padding: 8px 12px !important;
+        }
+
+            .logout-link a:hover,
+            .logout-link a:focus {
+                background-color: #c9302c !important;
+                color: #fff !important;
+            }
+
+        @@media (max-width: 767px) {
+            .forum-logo-text {
+                font-size: 18px;
+                max-width: 240px;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+
+            .user-profile-link {
+                display: block !important;
+            }
+
+            .admin-link a,
+            .logout-link a {
+                display: inline-block;
+                margin: 5px 15px;
+            }
+        }
+    </style>
+
+    @RenderSection("styles", required: false)
+</head>
+
+<body>
+    <main class="site-main-content">
+        <div class="top-menu-bottom932">
+            <nav class="navbar navbar-default">
+                <div class="container">
+
+                    <div class="navbar-header">
+                        <button type="button"
+                                class="navbar-toggle collapsed"
+                                data-toggle="collapse"
+                                data-target="#main-user-navbar"
+                                aria-expanded="false">
+
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+
+                        <a class="navbar-brand forum-logo-text" href="@Url.Action("Index", "Topic")">
+                            DIỄN ĐÀN TIN HỌC
+                        </a>
+                    </div>
+
+                    <div class="collapse navbar-collapse" id="main-user-navbar">
+                        <ul class="nav navbar-nav">
+                        </ul>
+
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>
+                                <a href="@Url.Action("Index", "Topic")">
+                                    Chủ đề
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="@Url.Action("Index", "User")">
+                                    Người dùng
+                                </a>
+                            </li>
+
+                            @if (Session["UserId"] == null)
+                            {
+                                <li>
+                                    <a href="@Url.Action("Login", "Account", new { returnUrl = Request.RawUrl })">
+                                        Đăng nhập
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="@Url.Action("Register", "Account")">
+                                        Đăng ký
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li>
+                                    <a href="@Url.Action("Index", "Profile")" class="user-profile-link">
+                                        @if (Session["Avatar"] != null && !string.IsNullOrWhiteSpace(Session["Avatar"].ToString()))
+                                        {
+                                            <img src="@Session["Avatar"]"
+                                                 alt="Avatar"
+                                                 class="user-profile-avatar" />
+                                        }
+                                        else
+                                        {
+                                            <img src="~/Uploads/Avatars/user.png"
+                                                 alt="Avatar"
+                                                 class="user-profile-avatar" />
+                                        }
+
+                                        @Session["FullName"]
+                                    </a>
+                                </li>
+
+                                if (Session["Role"] != null && Session["Role"].ToString() == "Admin")
+                                {
+                                    <li class="admin-link">
+                                        <a href="@Url.Action("Index", "Admin")">
+                                            Quản trị
+                                        </a>
+                                    </li>
+                                }
+
+                                <li class="logout-link">
+                                    <a href="@Url.Action("Logout", "Account")">
+                                        Đăng xuất
+                                    </a>
+                                </li>
+                            }
+
+                        </ul>
+                    </div>
+
+                </div>
+            </nav>
+        </div>
+
+        @RenderBody()
+    </main>
+
+    <section class="footer-social">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-md-6">
+                    <p>
+                        Copyright @DateTime.Now.Year TechForum |
+                        <strong>ASP.NET MVC Forum</strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="~/Scripts/user/js/jquery-3.1.1.min.js"></script>
+    <script src="~/Scripts/user/js/bootstrap.min.js"></script>
+    <script src="~/Scripts/user/js/npm.js"></script>
+
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>

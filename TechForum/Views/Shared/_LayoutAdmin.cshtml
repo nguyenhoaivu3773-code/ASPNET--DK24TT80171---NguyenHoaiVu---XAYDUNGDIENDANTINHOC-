@@ -1,0 +1,201 @@
+﻿@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+
+    Func<string, string, string> isActive = (controller, action) =>
+    {
+        if (currentController == controller && currentAction == action)
+        {
+            return "active";
+        }
+        return "";
+    };
+
+    Func<string, string> isControllerActive = (controller) =>
+    {
+        if (currentController == controller)
+        {
+            return "active";
+        }
+        return "";
+    };
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>@ViewBag.Title - Admin Panel</title>
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+    <link href="~/Content/admin/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/admin/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Content/admin/css/ionicons.min.css" rel="stylesheet" />
+    <link href="~/Content/admin/css/dataTables.bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/admin/css/select2.min.css" rel="stylesheet" />
+    <link href="~/Content/admin/css/AdminLTE.min.css" rel="stylesheet" />
+    <link href="~/Content/admin/css/_all-skins.min.css" rel="stylesheet" />
+    <link href="~/Content/admin/css/summernote.css" rel="stylesheet" />
+    <link href="~/Content/admin/css/style.css" rel="stylesheet" />
+
+    @RenderSection("Styles", required: false)
+</head>
+
+<body class="hold-transition fixed skin-blue sidebar-mini">
+
+    <div class="wrapper">
+
+        <header class="main-header">
+
+            <a href="@Url.Action("Index", "Admin")" class="logo">
+                <span class="logo-mini"><b>TF</b></span>
+                <span class="logo-lg">TechForum Admin</span>
+            </a>
+
+            <nav class="navbar navbar-static-top">
+
+                <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                </a>
+
+                <span style="float:left;line-height:50px;color:#fff;padding-left:15px;font-size:18px;">
+                    Trang quản trị
+                </span>
+
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+
+                        <li class="dropdown user user-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <img src="~/Content/admin/img/user-default.png" class="user-image" alt="User Image">
+                                <span class="hidden-xs">@Session["FullName"]</span>
+                            </a>
+
+                            <ul class="dropdown-menu">
+                                <li class="user-footer">
+                                    <div>
+                                        <a href="@Url.Action("Index", "Topic")" class="btn btn-default btn-flat">
+                                            Về trang chủ
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <a href="@Url.Action("Logout", "Account")" class="btn btn-default btn-flat">
+                                            Đăng xuất
+                                        </a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+
+                    </ul>
+                </div>
+
+            </nav>
+        </header>
+
+        <aside class="main-sidebar">
+            <section class="sidebar">
+
+                <ul class="sidebar-menu">
+
+                    <li class="treeview @isActive("Admin", "Index")">
+                        <a href="@Url.Action("Index", "Admin")">
+                            <i class="fa fa-dashboard"></i>
+                            <span>Tổng quan</span>
+                        </a>
+                    </li>
+
+                    <li class="treeview @isActive("Admin", "Users")">
+                        <a href="@Url.Action("Users", "Admin")">
+                            <i class="fa fa-users"></i>
+                            <span>Quản lý người dùng</span>
+                        </a>
+                    </li>
+
+                    <li class="treeview @isActive("Admin", "Topics")">
+                        <a href="@Url.Action("Topics", "Admin")">
+                            <i class="fa fa-comments"></i>
+                            <span>Quản lý chủ đề</span>
+                        </a>
+                    </li>
+
+                    <li class="treeview @isActive("Admin", "Tags")">
+                        <a href="@Url.Action("Tags", "Admin")">
+                            <i class="fa fa-tags"></i>
+                            <span>Quản lý thẻ</span>
+                        </a>
+                    </li>
+
+                    <li class="treeview @isActive("Admin", "TopicReports")">
+                        <a href="@Url.Action("TopicReports", "Admin")">
+                            <i class="fa fa-flag"></i>
+                            <span>Báo cáo chủ đề</span>
+                        </a>
+                    </li>
+
+                </ul>
+
+            </section>
+        </aside>
+
+        <div class="content-wrapper">
+            @RenderBody()
+        </div>
+
+        <footer class="main-footer">
+            <strong>Trang quản trị diễn dàng tin học</strong>
+        </footer>
+
+    </div>
+
+    <script src="~/Scripts/admin/js/jquery-2.2.4.min.js"></script>
+    <script src="~/Scripts/admin/js/bootstrap.min.js"></script>
+    <script src="~/Scripts/admin/js/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/admin/js/dataTables.bootstrap.min.js"></script>
+    <script src="~/Scripts/admin/js/select2.full.min.js"></script>
+    <script src="~/Scripts/admin/js/moment.min.js"></script>
+    <script src="~/Scripts/admin/js/bootstrap-datepicker.js"></script>
+    <script src="~/Scripts/admin/js/app.min.js"></script>
+    <script src="~/Scripts/admin/js/summernote.js"></script>
+
+    <script>
+        $(function () {
+            if ($("#example1").length) {
+                $("#example1").DataTable();
+            }
+
+            if ($(".select2").length) {
+                $(".select2").select2();
+            }
+
+            if ($("#editor1").length) {
+                $("#editor1").summernote({
+                    height: 300
+                });
+            }
+
+            $('#confirm-delete').on('show.bs.modal', function (e) {
+                $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+            });
+        });
+
+        function confirmDelete() {
+            return confirm("Bạn có chắc chắn muốn xóa dữ liệu này?");
+        }
+
+        function confirmActive() {
+            return confirm("Bạn có chắc chắn muốn kích hoạt?");
+        }
+
+        function confirmInactive() {
+            return confirm("Bạn có chắc chắn muốn khóa hoặc ẩn?");
+        }
+    </script>
+
+    @RenderSection("Scripts", required: false)
+
+</body>
+</html>

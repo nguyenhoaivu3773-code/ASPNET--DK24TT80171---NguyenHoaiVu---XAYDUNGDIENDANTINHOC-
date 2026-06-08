@@ -1,0 +1,204 @@
+﻿@model TechForum.Models.LoginVM
+
+@{
+    ViewBag.Title = "Đăng nhập";
+}
+
+@section styles {
+    <style>
+        .login-page-wrapper {
+            min-height: calc(100vh - 140px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 45px 15px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #eef2f7 100%);
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 440px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+            padding: 35px 35px 30px;
+            border-top: 4px solid #f48024;
+        }
+
+            .login-card .title {
+                text-align: center;
+                font-size: 28px;
+                font-weight: 700;
+                color: #2c3e50;
+                margin-bottom: 8px;
+            }
+
+            .login-card .description {
+                text-align: center;
+                color: #777;
+                margin-bottom: 25px;
+                font-size: 14px;
+            }
+
+            .login-card .form-group {
+                margin-bottom: 18px;
+            }
+
+            .login-card label {
+                font-weight: 600;
+                color: #333;
+                margin-bottom: 7px;
+            }
+
+            .login-card .form-control {
+                height: 42px;
+                border-radius: 4px;
+                border: 1px solid #ddd;
+                box-shadow: none;
+            }
+
+                .login-card .form-control:focus {
+                    border-color: #f48024;
+                    box-shadow: 0 0 0 2px rgba(244, 128, 36, 0.12);
+                }
+
+        .remember-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            color: #555;
+            font-size: 14px;
+        }
+
+            .remember-row label {
+                font-weight: 400;
+                margin-bottom: 0;
+            }
+
+            .remember-row input {
+                margin-right: 5px;
+            }
+
+        .login-submit-btn {
+            width: 100%;
+            height: 42px;
+            background: #f48024;
+            border: none;
+            color: #fff;
+            font-weight: 700;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+            .login-submit-btn:hover,
+            .login-submit-btn:focus {
+                background: #d96d17;
+                color: #fff;
+            }
+
+        .login-register-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+
+            .login-register-link a {
+                color: #f48024;
+                font-weight: 600;
+            }
+
+                .login-register-link a:hover {
+                    color: #d96d17;
+                    text-decoration: none;
+                }
+
+        .text-danger {
+            font-size: 13px;
+        }
+
+        .validation-summary-errors {
+            margin-bottom: 15px;
+        }
+
+            .validation-summary-errors ul {
+                padding-left: 18px;
+                margin-bottom: 0;
+            }
+
+        @@media (max-width: 480px) {
+            .login-card {
+                padding: 28px 22px 25px;
+            }
+
+                .login-card .title {
+                    font-size: 24px;
+                }
+        }
+    </style>
+}
+
+<section class="login-page-wrapper">
+    <div class="login-card">
+
+        <div class="title">Đăng nhập</div>
+        <div class="description">Chào mừng bạn quay lại diễn đàn tin học</div>
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["SuccessMessage"]
+            </div>
+        }
+
+        @using (Html.BeginForm("Login", "Account", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" name="ReturnUrl" value="@Model.ReturnUrl" />
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-group">
+                <label for="Email">Email</label>
+                <input type="email"
+                       name="Email"
+                       id="Email"
+                       class="form-control"
+                       placeholder="Nhập email của bạn"
+                       value="@(Model != null ? Model.Email : "")" />
+
+                @Html.ValidationMessage("Email", "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                <label for="Password">Mật khẩu</label>
+                <input type="password"
+                       name="Password"
+                       id="Password"
+                       class="form-control"
+                       placeholder="Nhập mật khẩu" />
+
+                @Html.ValidationMessage("Password", "", new { @class = "text-danger" })
+            </div>
+
+            <div class="remember-row">
+                <label>
+                    <input type="checkbox" name="RememberMe" value="true" />
+                    Ghi nhớ đăng nhập
+                </label>
+            </div>
+
+            <button type="submit" class="login-submit-btn">
+                Đăng nhập
+            </button>
+        }
+
+        <div class="login-register-link">
+            Chưa có tài khoản?
+            <a href="@Url.Action("Register", "Account")">Đăng ký ngay</a>
+        </div>
+
+    </div>
+</section>
