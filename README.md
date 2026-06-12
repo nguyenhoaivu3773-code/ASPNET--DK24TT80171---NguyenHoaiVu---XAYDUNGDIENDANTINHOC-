@@ -55,13 +55,13 @@ Dự án áp dụng kiến trúc chuẩn MVC và các công nghệ phổ biến 
 ## 📷 Giao Diện Hệ Thống
 
 ### Trang chủ & Danh sách chủ đề
-![Trang chủ TechForum](image/home_page.png)
+![Trang chủ TechForum](images/TrangChu.png)
 
 ### Trang chi tiết bài đăng & Thảo luận
-![Chi tiết chủ đề](image/post_detail.png)
+![Chi tiết chủ đề](images/ChiTietChuDe.png)
 
 ### Khu vực Quản trị dành cho Admin
-![Bảng điều khiển Admin](image/admin_dashboard.png)
+![Bảng điều khiển Admin](images/TrangChuAdmin.png)
 
 ---
 
