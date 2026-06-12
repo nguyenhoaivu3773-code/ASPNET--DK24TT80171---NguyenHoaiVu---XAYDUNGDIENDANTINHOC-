@@ -1,12 +1,12 @@
 # TechForum - Website Diễn Đàn Tin Học
 
-**TechForum** là một nền tảng diễn đàn thảo luận trực tuyến đơn giản về công nghệ thông tin, được xây dựng trên nền tảng **ASP.NET MVC 5 (.NET Framework)** kết hợp với **SQL Server**. Hệ thống cho phép người dùng chia sẻ kiến thức, đặt câu hỏi, tương tác thông qua hệ thống bình luận, vote, và quản lý nội dung vi phạm dưới sự kiểm soát của Quản trị viên (Admin).
+**TechForum** là một nền tảng diễn đàn thảo luận trực tuyến đơn giản về tin học, được xây dựng trên nền tảng **ASP.NET MVC 5 (.NET Framework)** kết hợp với **SQL Server**. Hệ thống cho phép người dùng chia sẻ kiến thức, đặt câu hỏi, tương tác thông qua hệ thống bình luận, vote, và quản lý nội dung vi phạm dưới sự kiểm soát của Quản trị viên (Admin).
 
 ---
 
 ## 🚀 Mục Tiêu Dự Án
 
-Dự án được phát triển nhằm mô phỏng một cộng đồng công nghệ thu nhỏ, tạo không gian kết nối cho các lập trình viên và người yêu công nghệ với các tính năng cốt lõi:
+Dự án được phát triển nhằm mô phỏng một cộng đồng công nghệ thu nhỏ, tạo không gian kết nối cho các người yêu công nghệ với các tính năng cốt lõi:
 * **Thảo luận & Hỏi đáp:** Đăng tải bài viết, đặt câu hỏi về các chủ đề công nghệ.
 * **Phân loại thông minh:** Gắn thẻ (Tags) xu hướng như `AI`, `C#`, `SQL Server`, `ASP.NET`, `Phần mềm`,... giúp dễ dàng tìm kiếm.
 * **Tương tác đa chiều:** Vote bài viết hữu ích, trả lời chủ đề và để lại bình luận (comment) trong từng câu trả lời.
@@ -44,7 +44,7 @@ Dự án áp dụng kiến trúc chuẩn MVC và các công nghệ phổ biến 
 * **Trang Thành viên:** Danh sách user kèm thống kê tổng số bài đăng, tổng lượt vote nhận được, và số lượng thảo luận đã tham gia.
 
 ### 2. Khu vực Quản trị (Admin Dashboard)
-* **Thống kê tổng quan:** Biểu đồ/số liệu trực quan về số lượng người dùng, chủ đề, thẻ tag và số lượng báo cáo đang chờ duyệt.
+* **Thống kê tổng quan:** Số liệu trực quan về số lượng người dùng, chủ đề, thẻ tag và số lượng báo cáo đang chờ duyệt.
 * **Quản lý Thành viên:** Duyệt danh sách user, thực hiện Khóa (Lock) hoặc Mở khóa (Unlock) tài khoản vi phạm.
 * **Quản lý Nội dung:** Kiểm duyệt và xóa bỏ các chủ đề không phù hợp.
 * **Quản lý Thẻ (Tags):** Thêm, sửa, xóa các thẻ phân loại trong hệ thống.
@@ -53,6 +53,12 @@ Dự án áp dụng kiến trúc chuẩn MVC và các công nghệ phổ biến 
 ---
 
 ## 📷 Giao Diện Hệ Thống
+
+### Đăng nhập
+![Trang chủ TechForum](images/DangNhap.png)
+
+### Đăng ký
+![Trang chủ TechForum](images/DangKy.png)
 
 ### Trang chủ & Danh sách chủ đề
 ![Trang chủ TechForum](images/TrangChu.png)
