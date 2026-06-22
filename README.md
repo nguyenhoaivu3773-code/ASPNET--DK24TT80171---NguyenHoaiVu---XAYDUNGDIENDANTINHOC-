@@ -63,11 +63,35 @@ Dự án áp dụng kiến trúc chuẩn MVC và các công nghệ phổ biến 
 ### Trang chủ & Danh sách chủ đề
 ![Trang chủ TechForum](images/TrangChu.png)
 
+### Tạo chủ đề
+![Tạo chủ đề](images/TaoChuDe.png)
+
 ### Trang chi tiết bài đăng & Thảo luận
 ![Chi tiết chủ đề](images/ChiTietChuDe.png)
 
-### Khu vực Quản trị dành cho Admin
+### Trang danh sách người dùng
+![Danh sách người dùng](images/NguoiDung.png)
+
+### Chi tiết người dùng
+![Chi tiết người dùng](images/ChiTietNguoiDung.png)
+
+### Trang tài khoản cá nhân
+![Chi tiết tài khoản người dùng](images/TaiKhoanNguoiDung.png)
+
+### Trang Quản trị tổng quan dành cho Admin
 ![Bảng điều khiển Admin](images/TrangChuAdmin.png)
+
+### Trang Quản trị người dùng
+![Bảng điều khiển Admin](images/QuanLyNguoiDung.png)
+
+### Trang Quản trị chủ đề
+![Bảng điều khiển Admin](images/QuanLyChuDe.png)
+
+### Trang Quản trị thẻ
+![Bảng điều khiển Admin](images/QuanLyThe.png)
+
+### Trang Quản trị báo cáo chủ đề
+![Bảng điều khiển Admin](images/QuanLyBaoCao.png)
 
 ---
 
