@@ -91,7 +91,7 @@ Dự án áp dụng kiến trúc chuẩn MVC và các công nghệ phổ biến 
 ![Bảng điều khiển Admin](images/QuanLyThe.png)
 
 ### Trang Quản trị báo cáo chủ đề
-![Bảng điều khiển Admin](images/QuanLyBaoCao.png)
+![Bảng điều khiển Admin](images/BaoCaoChuDe.png)
 
 ---
 
